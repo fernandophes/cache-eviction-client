@@ -19,7 +19,7 @@ import br.edu.ufersa.cc.sd.models.Order;
 
 public class ServerSimulator implements Runnable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ServerSimulator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ServerSimulator.class.getSimpleName());
 
     private static final List<Order> ORDERS = List.of(
             new Order().setCode(1L).setName("1a ordem").setDescription("Primeira ordem")

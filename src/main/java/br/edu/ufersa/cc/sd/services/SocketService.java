@@ -16,7 +16,7 @@ import br.edu.ufersa.cc.sd.exceptions.OperationException;
 
 public class SocketService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SocketService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SocketService.class.getSimpleName());
 
     private static final String HOST = "localhost";
     private static final Integer PORT = 8484;

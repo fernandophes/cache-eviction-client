@@ -1,75 +1,65 @@
 package br.edu.ufersa.cc.sd.views;
 
-import java.util.Scanner;
+import java.awt.Color;
+import java.util.LinkedHashMap;
+
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.WindowConstants;
 
 import br.edu.ufersa.cc.sd.services.OrderService;
-import lombok.AllArgsConstructor;
+import br.edu.ufersa.cc.sd.services.ScreenService;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class HomeView implements Runnable {
 
-    private final OrderService service;
+    private final OrderService orderService;
+    private ScreenService screen;
 
     @Override
     public void run() {
-        final var scanner = new Scanner(System.in);
-        int option;
+        final var frame = openChat();
 
-        do {
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
+        final var options = new LinkedHashMap<String, Runnable>();
+        options.put("Listar todas", new ListAllView(orderService, screen));
+        options.put("Criar nova", new ListAllView(orderService, screen));
+        options.put("Detalhar", new ListAllView(orderService, screen));
+        options.put("Atualizar", new ListAllView(orderService, screen));
+        options.put("Excluir", new ListAllView(orderService, screen));
+        options.put("Contar", new ListAllView(orderService, screen));
+        options.put("Sair", frame::dispose);
 
-            System.out.println("GERENCIADOR DE ORDENS DE SERVIÇO\n");
-            System.out.println("Confira as opções:");
-            System.out.println("1 - Listar todas");
-            System.out.println("2 - Criar nova");
-            System.out.println("3 - Detalhar");
-            System.out.println("4 - Atualizar");
-            System.out.println("5 - Excluir");
-            System.out.println("6 - Contar");
-            System.out.println("0 - Sair\n");
+        while (frame.isShowing()) {
+            screen.clear();
+            screen.println("orderService");
+            screen.choose("O que deseja fazer?", options);
+        }
+    }
 
-            System.out.print("Digite a opção desejada: ");
-            option = scanner.nextInt();
-            scanner.nextLine();
+    private JFrame openChat() {
+        // Criação da tela
+        final var frame = new JFrame("Gerenciador de Ordens de Serviço");
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setSize(1200, 800);
+        frame.setVisible(true);
 
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
+        final var textArea = new JTextArea("Exemplo de texto\n");
+        textArea.setEditable(false);
+        textArea.setFont(textArea.getFont().deriveFont(22F));
+        textArea.setBackground(Color.BLACK);
+        textArea.setForeground(Color.WHITE);
 
-            switch (option) {
-                case 1:
-                    new ListAllView(service).run();
-                    break;
-                // case 2:
-                // new Create().run();
-                // break;
-                // case 3:
-                // new Detail().run();
-                // break;
-                // case 4:
-                // new Update().run();
-                // break;
-                // case 5:
-                // new Delete().run();
-                // break;
-                // case 6:
-                // new Count().run();
-                // break;
-                case 0:
-                    System.out.println("Saindo...");
-                    break;
-                default:
-                    System.out.println("Opção inválida.");
-                    break;
+        final var scrollPane = new JScrollPane();
+        scrollPane.setViewportView(textArea);
 
-            }
+        frame.add(scrollPane);
+        frame.setVisible(true);
 
-            System.out.print("\nPressione ENTER para continuar...");
-            scanner.nextLine();
-        } while (option != 0);
+        screen = new ScreenService(textArea);
 
-        scanner.close();
-        System.out.println("Sistema encerrado.");
+        return frame;
     }
 
 }
