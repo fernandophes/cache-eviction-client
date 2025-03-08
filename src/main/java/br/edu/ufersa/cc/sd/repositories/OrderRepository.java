@@ -3,6 +3,7 @@ package br.edu.ufersa.cc.sd.repositories;
 import java.util.List;
 
 import br.edu.ufersa.cc.sd.dto.Request;
+import br.edu.ufersa.cc.sd.dto.Response;
 import br.edu.ufersa.cc.sd.enums.Operation;
 import br.edu.ufersa.cc.sd.enums.ResponseStatus;
 import br.edu.ufersa.cc.sd.exceptions.OperationException;
@@ -15,7 +16,7 @@ public class OrderRepository {
 
     private final SocketService socketService;
 
-    public List<Order> findAll() {
+    public List<Order> listAll() {
         final var request = new Request<>(Operation.LIST, Order.class);
         final var response = socketService.call(request);
 
@@ -66,7 +67,7 @@ public class OrderRepository {
 
     public Long countAll() {
         final var request = new Request<>(Operation.COUNT, Order.class);
-        final var response = socketService.call(request, Long.class);
+        final Response<Long> response = socketService.callAndTransform(request);
 
         if (ResponseStatus.ERROR.equals(response.getStatus())) {
             throw new OperationException(response.getMessage());
