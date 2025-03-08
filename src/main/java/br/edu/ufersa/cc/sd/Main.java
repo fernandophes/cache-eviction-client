@@ -8,7 +8,7 @@ public class Main {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
-        LOG.info("Hello world!");
+        LOG.info("Hello, World!");
     }
 
 }
